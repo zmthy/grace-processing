@@ -1,7 +1,15 @@
-import java.lang.reflect.Method;
-import java.util.*;
+import grace.lang.Bool;
+import grace.lang.Nothing;
+import grace.lang.Num;
+import grace.lang.Prelude;
+import grace.lang.Str;
+import grace.lang.Value;
 
-import grace.lang.*;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import processing.core.PApplet;
 
@@ -10,504 +18,491 @@ import processing.core.PApplet;
  * 
  * @author Timothy Jones
  */
-public final class GraceProcessing extends GraceObject {
-
-  private static GraceProcessing $module;
-
-  public static GraceProcessing $module() {
-    return $module == null ? $module = new GraceProcessing() : $module;
-  }
-
-  private static float fl(GraceObject num) {
-    return (float) ((GraceNumber) num).value;
-  }
-  
-  private static int i(GraceObject num) {
-    return (int) ((GraceNumber) num).value;
-  }
-  
-  private static int col(GraceObject col) {
-    return ((Color) col).color;
-  }
-
-  private static Applet applet = new Applet();
-
-  private boolean started = false;
-
-  public GraceObject start() {
-    if (!started) {
-      String[] args = { "GraceProcessing$Applet" };
-      PApplet.runSketch(args, applet);
-      started = true;
-    }
-
-    return $void;
-  }
-
-  public GraceObject size(GraceObject width, GraceObject height) {
-    applet.size(i(width), i(height));
-    return $void;
-  }
-
-  public GraceObject width() {
-    return $num(applet.width);
-  }
-
-  public GraceObject height() {
-    return $num(applet.height);
-  }
-
-  public GraceObject loop() {
-    applet.loop();
-    return $void;
-  }
-
-  public GraceObject noLoop() {
-    applet.noLoop();
-    return $void;
-  }
-
-  public GraceObject exit() {
-    applet.exit();
-    return $void;
-  }
-
-  private static final List<GraceObject> onSetup =
-      new LinkedList<GraceObject>();
-
-  public GraceObject onSetup(GraceObject block) {
-    onSetup.add(block);
-    return $void;
-  }
-
-  private static final List<GraceObject> onDraw = new LinkedList<GraceObject>();
-
-  public GraceObject onDraw(GraceObject block) {
-    onDraw.add(block);
-    return $void;
-  }
-
-  private static final Mouse mouse = new Mouse();
-
-  public GraceObject mouse() {
-    return mouse;
-  }
-
-  private static final Keyboard keyboard = new Keyboard();
-
-  public GraceObject keyboard() {
-    return keyboard;
-  }
-
-  public GraceObject color(GraceObject value) {
-    return new Color(i(value));
-  }
-
-  public GraceObject color$withAlpha(GraceObject value, GraceObject alpha) {
-    return new Color(applet.color(i(value), i(alpha)));
-  }
-
-  public GraceObject r$g$b(GraceObject r, GraceObject g, GraceObject b) {
-    return new Color(applet.color(i(r), i(g), i(b)));
-  }
-
-  public GraceObject r$g$b$withAlpha(GraceObject r, GraceObject g, GraceObject b,
-      GraceObject alpha) {
-    return new Color(applet.color(i(r), i(g), i(b), i(alpha)));
-  }
-
-  public GraceObject background(GraceObject color) {
-    applet.background(col(color));
-    return $void;
-  }
-  
-  public GraceObject fill(GraceObject color) {
-    applet.fill(col(color));
-    return $void;
-  }
-  
-  public GraceObject stroke(GraceObject color) {
-    applet.stroke(col(color));
-    return $void;
-  }
-  
-  public GraceObject noFill() {
-    applet.noFill();
-    return $void;
-  }
-  
-  public GraceObject noStroke() {
-    applet.noStroke();
-    return $void;
-  }
-  
-  public GraceObject strokeWeight(GraceObject weight) {
-    applet.strokeWeight(fl(weight));
-    return $void;
-  }
-
-  public GraceObject arc(GraceObject x, GraceObject y, GraceObject width,
-      GraceObject height, GraceObject start, GraceObject end) {
-    applet.arc(fl(x), fl(y), fl(width), fl(height), fl(start), fl(end));
-    return $void;
-  }
-
-  public GraceObject ellipse(GraceObject x, GraceObject y, GraceObject width,
-      GraceObject height) {
-    applet.ellipse(fl(x), fl(y), fl(width), fl(height));
-    return $void;
-  }
-
-  public GraceObject line(GraceObject x1, GraceObject y1, GraceObject x2,
-      GraceObject y2) {
-    applet.line(fl(x1), fl(y1), fl(x2), fl(y2));
-    return $void;
-  }
-
-  public GraceObject point(GraceObject x, GraceObject y) {
-    applet.point(fl(x), fl(y));
-    return $void;
-  }
-
-  public GraceObject quad(GraceObject x1, GraceObject y1, GraceObject x2,
-      GraceObject y2, GraceObject x3, GraceObject y3, GraceObject x4,
-      GraceObject y4) {
-    applet.quad(fl(x1), fl(y1), fl(x2), fl(y2), fl(x3), fl(y3), fl(x4),
-        fl(y4));
-    return $void;
-  }
-
-  public GraceObject rect(GraceObject x, GraceObject y, GraceObject width,
-      GraceObject height) {
-    applet.rect(fl(x), fl(y), fl(width), fl(height));
-    return $void;
-  }
-
-  public GraceObject triangle(GraceObject x1, GraceObject y1, GraceObject x2,
-      GraceObject y2, GraceObject x3, GraceObject y3) {
-    applet.triangle(fl(x1), fl(y1), fl(x2), fl(y2), fl(x3), fl(y3));
-    return $void;
-  }
-
-  /**
-   * The PApplet that will route calls and events to and from the Grace
-   * object.
-   */
-  @SuppressWarnings("serial")
-  public static final class Applet extends PApplet {
-    
-    public void setup() {
-      smooth();
-      for (GraceObject block : onSetup) {
-        block.invoke("apply");
-      }
-    }
-
-    public void draw() {
-      for (GraceObject block : onDraw) {
-        block.invoke("apply");
-      }
-    }
-
-    public void mousePressed() {
-      MouseButton button = getMouseButton();
-
-      button.isPressed = true;
-      applyAll(mouse.onPress, button);
-      applyAll(button.onPress, button);
-    }
-
-    public void mouseReleased() {
-      MouseButton button = getMouseButton();
-
-      button.isPressed = true;
-      applyAll(mouse.onRelease, button);
-      applyAll(button.onRelease, button);
-    }
-
-    public void mouseClicked() {
-      MouseButton button = getMouseButton();
-
-      applyAll(mouse.onClick, button);
-      applyAll(button.onClick, button);
-    }
-
-    public void mouseMoved() {
-      applyAll(mouse.onMove, $num(mouseX), $num(mouseY));
-    }
-
-    public void mouseDragged() {
-      applyAll(mouse.onDrag, $num(mouseX), $num(mouseY));
-    }
-
-    public void keyPressed() {
-      Key key = new Key(this.key, keyCode);
-
-      keyboard.keys.put(keyCode, key);
-      applyAll(keyboard.onPress, key);
-    }
-
-    public void keyReleased() {
-      Key key = keyboard.keys.get(keyCode);
-
-      keyboard.keys.remove(keyCode);
-      applyAll(keyboard.onRelease, key);
-    }
-
-    public void keyTyped() {
-      applyAll(keyboard.onType, new Key(key, keyCode));
-    }
-
-  }
-
-  /**
-   * The Grace object representing the state of the mouse.
-   */
-  protected static final class Mouse extends GraceObject {
-
-    private final MouseButton left = new MouseButton();
-    private final MouseButton right = new MouseButton();
-    private final MouseButton center = new MouseButton();
-
-    public GraceObject x() {
-      return $num(applet.mouseX);
-    }
-
-    public GraceObject y() {
-      return $num(applet.mouseY);
-    }
-
-    public GraceObject left() {
-      return left;
-    }
-
-    public GraceObject right() {
-      return right;
-    }
-
-    public GraceObject center() {
-      return center;
-    }
-
-    private final List<GraceObject> onPress = new LinkedList<GraceObject>();
-
-    public GraceObject onPress(GraceObject block) {
-      onPress.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onRelease = new LinkedList<GraceObject>();
-
-    public GraceObject onRelease(GraceObject block) {
-      onRelease.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onClick = new LinkedList<GraceObject>();
-
-    public GraceObject onClick(GraceObject block) {
-      onClick.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onMove = new LinkedList<GraceObject>();
-
-    public GraceObject onMove(GraceObject block) {
-      onMove.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onDrag = new LinkedList<GraceObject>();
-
-    public GraceObject onDrag(GraceObject block) {
-      onDrag.add(block);
-      return $void;
-    }
-
-    protected Object invoke(Method method, Object[] args) throws Exception {
-      return method.invoke(this, args);
-    }
-
-  }
-
-  /**
-   * The Grace objects representing the three mouse buttons.
-   */
-  protected static final class MouseButton extends GraceObject {
-
-    private boolean isPressed;
-
-    public GraceObject isPressed() {
-      return isPressed ? $true : $false;
-    }
-
-    private final List<GraceObject> onPress = new LinkedList<GraceObject>();
-
-    public GraceObject onPress(GraceObject block) {
-      onPress.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onRelease = new LinkedList<GraceObject>();
-
-    public GraceObject onRelease(GraceObject block) {
-      onRelease.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onClick = new LinkedList<GraceObject>();
-
-    public GraceObject onClick(GraceObject block) {
-      onClick.add(block);
-      return $void;
-    }
-
-    protected Object invoke(Method method, Object[] args) throws Exception {
-      return method.invoke(this, args);
-    }
-
-  }
-
-  /**
-   * The Grace object representing the state of the keyboard.
-   */
-  protected static final class Keyboard extends GraceObject {
-
-    private final Map<Integer, Key> keys = new HashMap<Integer, Key>();
-
-    public GraceObject keys() {
-      return $list(keys.values().toArray(new GraceObject[keys.size()]));
-    }
-
-    private final List<GraceObject> onPress = new LinkedList<GraceObject>();
-
-    public GraceObject onPress(GraceObject block) {
-      onPress.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onRelease = new LinkedList<GraceObject>();
-
-    public GraceObject onRelease(GraceObject block) {
-      onRelease.add(block);
-      return $void;
-    }
-
-    private final List<GraceObject> onType = new LinkedList<GraceObject>();
-
-    public GraceObject onType(GraceObject block) {
-      onType.add(block);
-      return $void;
-    }
-
-    protected Object invoke(Method method, Object[] args) throws Exception {
-      return method.invoke(this, args);
-    }
-
-  }
-
-  /**
-   * The Grace objects representing keys for the keyboard object.
-   * 
-   * Extends a native Grace string, so it can be used as a single character
-   * string, which is the character of the key pressed. Simply adds the code
-   * method which returns the key code of the character.
-   */
-  protected static final class Key extends GraceObject {
-
-    private int code;
-
-    public Key(char c, int code) {
-      super($str(Character.toString(c)), true);
-
-      this.code = code;
-    }
-
-    public GraceObject code() {
-      return $num(code);
-    }
-    
-    public GraceObject asString() {
-      return $super.asString();
-    }
-
-    protected Object invoke(Method method, Object[] args) throws Exception {
-      return method.invoke(this, args);
-    }
-
-  }
-
-  /**
-   * The Grace objects representing colors.
-   */
-  protected static final class Color extends GraceObject {
-
-    private int color;
-
-    public Color(int color) {
-      this.color = color;
-    }
-    
-    public GraceObject red() {
-      return $num(applet.red(color));
-    }
-    
-    public GraceObject green() {
-      return $num(applet.green(color));
-    }
-    
-    public GraceObject blue() {
-      return $num(applet.blue(color));
-    }
-    
-    public GraceObject hue() {
-      return $num(applet.hue(color));
-    }
-    
-    public GraceObject saturation() {
-      return $num(applet.saturation(color));
-    }
-    
-    public GraceObject brightness() {
-      return $num(applet.brightness(color));
-    }
-    
-    public GraceObject alpha() {
-      return $num(applet.alpha(color));
-    }
-
-    public GraceObject hex() {
-      return $str(PApplet.hex(color));
-    }
-
-    public GraceObject asString() {
-      return $str("#" + PApplet.hex(color));
-    }
-
-    protected Object invoke(Method method, Object[] args) throws Exception {
-      return method.invoke(this, args);
-    }
-
-  }
-
-  private static void applyAll(List<GraceObject> blocks, GraceObject... args) {
-    for (GraceObject block : blocks) {
-      block.invoke("apply", args);
-    }
-  }
-
-  private static MouseButton getMouseButton() {
-    switch (applet.mouseButton) {
-    case PApplet.LEFT:
-      return mouse.left;
-    case PApplet.RIGHT:
-      return mouse.right;
-    case PApplet.CENTER:
-      return mouse.center;
-    }
-
-    throw new RuntimeException("Grace-Processing internal exception: "
-        + "unknown mouse button value.");
-  }
-
+public final class GraceProcessing extends Prelude {
+	
+	private static GraceProcessing $module;
+	
+	public static GraceProcessing $module() {
+		return $module == null ? $module = new GraceProcessing() : $module;
+	}
+	
+	private static int toColor(Value col) {
+		return ((Color) col).color;
+	}
+	
+	private static Applet applet = new Applet();
+	
+	private boolean started = false;
+	
+	public Nothing start(Value self) {
+		if (!started) {
+			String[] args = { "GraceProcessing$Applet" };
+			PApplet.runSketch(args, applet);
+			started = true;
+		}
+		
+		return nothing;
+	}
+	
+	public Nothing size(Value self, Value width, Value height) {
+		applet.size($javaInteger(width), $javaInteger(height));
+		return nothing;
+	}
+	
+	public Num width(Value self) {
+		return $number(applet.width);
+	}
+	
+	public Num height(Value self) {
+		return $number(applet.height);
+	}
+	
+	public Nothing loop(Value self) {
+		applet.loop();
+		return nothing;
+	}
+	
+	public Nothing noLoop(Value self) {
+		applet.noLoop();
+		return nothing;
+	}
+	
+	public Nothing exit(Value self) {
+		applet.exit();
+		return nothing;
+	}
+	
+	private static final List<Value> onSetup = new LinkedList<Value>();
+	
+	public Nothing onSetup(Value self, Value block) {
+		onSetup.add(block);
+		return nothing;
+	}
+	
+	private static final List<Value> onDraw = new LinkedList<Value>();
+	
+	public Nothing onDraw(Value self, Value block) {
+		onDraw.add(block);
+		return nothing;
+	}
+	
+	private static final Mouse mouse = new Mouse();
+	
+	public Mouse mouse(Value self) {
+		return mouse;
+	}
+	
+	private static final Keyboard keyboard = new Keyboard();
+	
+	public Keyboard keyboard(Value self) {
+		return keyboard;
+	}
+	
+	public Color color(Value self, Value value) {
+		return new Color($javaInteger(value));
+	}
+	
+	public Color color$withAlpha(Value self, Value value, Value alpha) {
+		return new Color(applet.color($javaInteger(value), $javaInteger(alpha)));
+	}
+	
+	public Color r$g$b(Value self, Value r, Value g, Value b) {
+		return new Color(applet.color($javaInteger(r), $javaInteger(g),
+		    $javaInteger(b)));
+	}
+	
+	public Color r$g$b$withAlpha(Value self, Value r, Value g, Value b, Value alpha) {
+		return new Color(applet.color($javaInteger(r), $javaInteger(g),
+		    $javaInteger(b), $javaInteger(alpha)));
+	}
+	
+	public Nothing background(Value self, Value color) {
+		applet.background(toColor(color));
+		return nothing;
+	}
+	
+	public Nothing fill(Value self, Value color) {
+		applet.fill(toColor(color));
+		return nothing;
+	}
+	
+	public Nothing stroke(Value self, Value color) {
+		applet.stroke(toColor(color));
+		return nothing;
+	}
+	
+	public Nothing noFill(Value self) {
+		applet.noFill();
+		return nothing;
+	}
+	
+	public Nothing noStroke(Value self) {
+		applet.noStroke();
+		return nothing;
+	}
+	
+	public Nothing strokeWeight(Value self, Value weight) {
+		applet.strokeWeight($javaFloat(weight));
+		return nothing;
+	}
+	
+	public Nothing arc(Value self, Value x, Value y, Value width, Value height,
+	    Value start, Value end) {
+		applet.arc($javaFloat(x), $javaFloat(y), $javaFloat(width),
+		    $javaFloat(height), $javaFloat(start), $javaFloat(end));
+		return nothing;
+	}
+	
+	public Nothing ellipse(Value self, Value x, Value y, Value width, Value height) {
+		applet.ellipse($javaFloat(x), $javaFloat(y), $javaFloat(width),
+		    $javaFloat(height));
+		return nothing;
+	}
+	
+	public Nothing line(Value self, Value x1, Value y1, Value x2, Value y2) {
+		applet.line($javaFloat(x1), $javaFloat(y1), $javaFloat(x2), $javaFloat(y2));
+		return nothing;
+	}
+	
+	public Nothing point(Value self, Value x, Value y) {
+		applet.point($javaFloat(x), $javaFloat(y));
+		return nothing;
+	}
+	
+	public Nothing quad(Value self, Value x1, Value y1, Value x2, Value y2,
+	    Value x3, Value y3, Value x4, Value y4) {
+		applet.quad($javaFloat(x1), $javaFloat(y1), $javaFloat(x2), $javaFloat(y2),
+		    $javaFloat(x3), $javaFloat(y3), $javaFloat(x4), $javaFloat(y4));
+		return nothing;
+	}
+	
+	public Nothing rect(Value self, Value x, Value y, Value width, Value height) {
+		applet.rect($javaFloat(x), $javaFloat(y), $javaFloat(width),
+		    $javaFloat(height));
+		return nothing;
+	}
+	
+	public Nothing triangle(Value self, Value x1, Value y1, Value x2, Value y2,
+	    Value x3, Value y3) {
+		applet.triangle($javaFloat(x1), $javaFloat(y1), $javaFloat(x2),
+		    $javaFloat(y2), $javaFloat(x3), $javaFloat(y3));
+		return nothing;
+	}
+	
+	/**
+	 * The PApplet that will route calls and events to and from the Grace object.
+	 */
+	@SuppressWarnings("serial")
+	public static final class Applet extends PApplet {
+		
+		public void setup() {
+			smooth();
+			for (Value block : onSetup) {
+				block.invoke("apply");
+			}
+		}
+		
+		public void draw() {
+			for (Value block : onDraw) {
+				block.invoke("apply");
+			}
+		}
+		
+		public void mousePressed() {
+			MouseButton button = getMouseButton();
+			
+			button.isPressed = true;
+			applyAll(mouse.onPress, button);
+			applyAll(button.onPress, button);
+		}
+		
+		public void mouseReleased() {
+			MouseButton button = getMouseButton();
+			
+			button.isPressed = true;
+			applyAll(mouse.onRelease, button);
+			applyAll(button.onRelease, button);
+		}
+		
+		public void mouseClicked() {
+			MouseButton button = getMouseButton();
+			
+			applyAll(mouse.onClick, button);
+			applyAll(button.onClick, button);
+		}
+		
+		public void mouseMoved() {
+			applyAll(mouse.onMove, $number(mouseX), $number(mouseY));
+		}
+		
+		public void mouseDragged() {
+			applyAll(mouse.onDrag, $number(mouseX), $number(mouseY));
+		}
+		
+		public void keyPressed() {
+			Key key = new Key(this.key, keyCode);
+			
+			keyboard.keys.put(keyCode, key);
+			applyAll(keyboard.onPress, key);
+		}
+		
+		public void keyReleased() {
+			Key key = keyboard.keys.get(keyCode);
+			
+			keyboard.keys.remove(keyCode);
+			applyAll(keyboard.onRelease, key);
+		}
+		
+		public void keyTyped() {
+			applyAll(keyboard.onType, new Key(key, keyCode));
+		}
+		
+	}
+	
+	/**
+	 * The Grace object representing the state of the mouse.
+	 */
+	protected static final class Mouse extends Value {
+		
+		private final MouseButton left = new MouseButton();
+		private final MouseButton right = new MouseButton();
+		private final MouseButton center = new MouseButton();
+		
+		public Num x(Value self) {
+			return $number(applet.mouseX);
+		}
+		
+		public Num y(Value self) {
+			return $number(applet.mouseY);
+		}
+		
+		public MouseButton left(Value self) {
+			return left;
+		}
+		
+		public MouseButton right(Value self) {
+			return right;
+		}
+		
+		public MouseButton center(Value self) {
+			return center;
+		}
+		
+		private final List<Value> onPress = new LinkedList<Value>();
+		
+		public Nothing onPress(Value self, Value block) {
+			onPress.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onRelease = new LinkedList<Value>();
+		
+		public Nothing onRelease(Value self, Value block) {
+			onRelease.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onClick = new LinkedList<Value>();
+		
+		public Nothing onClick(Value self, Value block) {
+			onClick.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onMove = new LinkedList<Value>();
+		
+		public Nothing onMove(Value self, Value block) {
+			onMove.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onDrag = new LinkedList<Value>();
+		
+		public Nothing onDrag(Value self, Value block) {
+			onDrag.add(block);
+			return nothing;
+		}
+		
+		protected Object invoke(Method method, Object[] args) throws Exception {
+			return method.invoke(this, args);
+		}
+		
+	}
+	
+	/**
+	 * The Grace objects representing the three mouse buttons.
+	 */
+	protected static final class MouseButton extends Value {
+		
+		private boolean isPressed;
+		
+		public Bool isPressed(Value self) {
+			return isPressed ? $true : $false;
+		}
+		
+		private final List<Value> onPress = new LinkedList<Value>();
+		
+		public Nothing onPress(Value self, Value block) {
+			onPress.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onRelease = new LinkedList<Value>();
+		
+		public Nothing onRelease(Value self, Value block) {
+			onRelease.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onClick = new LinkedList<Value>();
+		
+		public Nothing onClick(Value self, Value block) {
+			onClick.add(block);
+			return nothing;
+		}
+		
+		protected Object invoke(Method method, Object[] args) throws Exception {
+			return method.invoke(this, args);
+		}
+		
+	}
+	
+	/**
+	 * The Grace object representing the state of the keyboard.
+	 */
+	protected static final class Keyboard extends Value {
+		
+		private final Map<Integer, Key> keys = new HashMap<Integer, Key>();
+		
+		public grace.lang.List keys(Value self) {
+			return $list(keys.values().toArray(new Value[keys.size()]));
+		}
+		
+		private final List<Value> onPress = new LinkedList<Value>();
+		
+		public Nothing onPress(Value self, Value block) {
+			onPress.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onRelease = new LinkedList<Value>();
+		
+		public Nothing onRelease(Value self, Value block) {
+			onRelease.add(block);
+			return nothing;
+		}
+		
+		private final List<Value> onType = new LinkedList<Value>();
+		
+		public Nothing onType(Value self, Value block) {
+			onType.add(block);
+			return nothing;
+		}
+		
+		protected Object invoke(Method method, Object[] args) throws Exception {
+			return method.invoke(this, args);
+		}
+		
+	}
+	
+	/**
+	 * The Grace objects representing keys for the keyboard object.
+	 * 
+	 * Extends a native Grace string, so it can be used as a single character
+	 * string, which is the character of the key pressed. Simply adds the code
+	 * method which returns the key code of the character.
+	 */
+	protected static final class Key extends Value {
+		
+		private int code;
+		
+		public Key(char c, int code) {
+			inherits($string(Character.toString(c)));
+			
+			this.code = code;
+		}
+		
+		public Num code(Value self) {
+			return $number(code);
+		}
+		
+		protected Object invoke(Method method, Object[] args) throws Exception {
+			return method.invoke(this, args);
+		}
+		
+	}
+	
+	/**
+	 * The Grace objects representing colors.
+	 */
+	protected static final class Color extends Value {
+		
+		private int color;
+		
+		public Color(int color) {
+			this.color = color;
+		}
+		
+		public Num red(Value self) {
+			return $number(applet.red(color));
+		}
+		
+		public Num green(Value self) {
+			return $number(applet.green(color));
+		}
+		
+		public Num blue(Value self) {
+			return $number(applet.blue(color));
+		}
+		
+		public Num hue(Value self) {
+			return $number(applet.hue(color));
+		}
+		
+		public Num saturation(Value self) {
+			return $number(applet.saturation(color));
+		}
+		
+		public Num brightness(Value self) {
+			return $number(applet.brightness(color));
+		}
+		
+		public Num alpha(Value self) {
+			return $number(applet.alpha(color));
+		}
+		
+		public Str hex(Value self) {
+			return $string(PApplet.hex(color));
+		}
+		
+		public Str asString(Value self) {
+			return $string("#" + PApplet.hex(color));
+		}
+		
+		protected Object invoke(Method method, Object[] args) throws Exception {
+			return method.invoke(this, args);
+		}
+		
+	}
+	
+	private static void applyAll(List<Value> blocks, Value... args) {
+		for (Value block : blocks) {
+			block.invoke("apply", args);
+		}
+	}
+	
+	private static MouseButton getMouseButton() {
+		switch (applet.mouseButton) {
+		case PApplet.LEFT:
+			return mouse.left;
+		case PApplet.RIGHT:
+			return mouse.right;
+		case PApplet.CENTER:
+			return mouse.center;
+		}
+		
+		throw new RuntimeException("Grace-Processing internal exception: "
+		    + "unknown mouse button value.");
+	}
+	
 }

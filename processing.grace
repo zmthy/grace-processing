@@ -1,8 +1,6 @@
 import GraceProcessing
 
-method applet {
-    GraceProcessing
-}
+def applet : Applet = GraceProcessing
 
 type Applet = {
 
