@@ -3,7 +3,7 @@ import grace.lang.Nothing;
 import grace.lang.Num;
 import grace.lang.Prelude;
 import grace.lang.Str;
-import grace.lang.Value;
+import grace.lang.Obj;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public final class GraceProcessing extends Prelude {
 		return $module == null ? $module = new GraceProcessing() : $module;
 	}
 	
-	private static int toColor(Value col) {
+	private static int toColor(Obj col) {
 		return ((Color) col).color;
 	}
 	
@@ -34,7 +34,7 @@ public final class GraceProcessing extends Prelude {
 	
 	private boolean started = false;
 	
-	public Nothing start(Value self) {
+	public Nothing start(Obj self) {
 		if (!started) {
 			String[] args = { "GraceProcessing$Applet" };
 			PApplet.runSketch(args, applet);
@@ -44,146 +44,146 @@ public final class GraceProcessing extends Prelude {
 		return nothing;
 	}
 	
-	public Nothing size(Value self, Value width, Value height) {
+	public Nothing size(Obj self, Obj width, Obj height) {
 		applet.size($javaInteger(width), $javaInteger(height));
 		return nothing;
 	}
 	
-	public Num width(Value self) {
+	public Num width(Obj self) {
 		return $number(applet.width);
 	}
 	
-	public Num height(Value self) {
+	public Num height(Obj self) {
 		return $number(applet.height);
 	}
 	
-	public Nothing loop(Value self) {
+	public Nothing loop(Obj self) {
 		applet.loop();
 		return nothing;
 	}
 	
-	public Nothing noLoop(Value self) {
+	public Nothing noLoop(Obj self) {
 		applet.noLoop();
 		return nothing;
 	}
 	
-	public Nothing exit(Value self) {
+	public Nothing exit(Obj self) {
 		applet.exit();
 		return nothing;
 	}
 	
-	private static final List<Value> onSetup = new LinkedList<Value>();
+	private static final List<Obj> onSetup = new LinkedList<Obj>();
 	
-	public Nothing onSetup(Value self, Value block) {
+	public Nothing onSetup(Obj self, Obj block) {
 		onSetup.add(block);
 		return nothing;
 	}
 	
-	private static final List<Value> onDraw = new LinkedList<Value>();
+	private static final List<Obj> onDraw = new LinkedList<Obj>();
 	
-	public Nothing onDraw(Value self, Value block) {
+	public Nothing onDraw(Obj self, Obj block) {
 		onDraw.add(block);
 		return nothing;
 	}
 	
 	private static final Mouse mouse = new Mouse();
 	
-	public Mouse mouse(Value self) {
+	public Mouse mouse(Obj self) {
 		return mouse;
 	}
 	
 	private static final Keyboard keyboard = new Keyboard();
 	
-	public Keyboard keyboard(Value self) {
+	public Keyboard keyboard(Obj self) {
 		return keyboard;
 	}
 	
-	public Color color(Value self, Value value) {
+	public Color color(Obj self, Obj value) {
 		return new Color($javaInteger(value));
 	}
 	
-	public Color color$withAlpha(Value self, Value value, Value alpha) {
+	public Color color$withAlpha(Obj self, Obj value, Obj alpha) {
 		return new Color(applet.color($javaInteger(value), $javaInteger(alpha)));
 	}
 	
-	public Color r$g$b(Value self, Value r, Value g, Value b) {
+	public Color r$g$b(Obj self, Obj r, Obj g, Obj b) {
 		return new Color(applet.color($javaInteger(r), $javaInteger(g),
 		    $javaInteger(b)));
 	}
 	
-	public Color r$g$b$withAlpha(Value self, Value r, Value g, Value b, Value alpha) {
+	public Color r$g$b$withAlpha(Obj self, Obj r, Obj g, Obj b, Obj alpha) {
 		return new Color(applet.color($javaInteger(r), $javaInteger(g),
 		    $javaInteger(b), $javaInteger(alpha)));
 	}
 	
-	public Nothing background(Value self, Value color) {
+	public Nothing background(Obj self, Obj color) {
 		applet.background(toColor(color));
 		return nothing;
 	}
 	
-	public Nothing fill(Value self, Value color) {
+	public Nothing fill(Obj self, Obj color) {
 		applet.fill(toColor(color));
 		return nothing;
 	}
 	
-	public Nothing stroke(Value self, Value color) {
+	public Nothing stroke(Obj self, Obj color) {
 		applet.stroke(toColor(color));
 		return nothing;
 	}
 	
-	public Nothing noFill(Value self) {
+	public Nothing noFill(Obj self) {
 		applet.noFill();
 		return nothing;
 	}
 	
-	public Nothing noStroke(Value self) {
+	public Nothing noStroke(Obj self) {
 		applet.noStroke();
 		return nothing;
 	}
 	
-	public Nothing strokeWeight(Value self, Value weight) {
+	public Nothing strokeWeight(Obj self, Obj weight) {
 		applet.strokeWeight($javaFloat(weight));
 		return nothing;
 	}
 	
-	public Nothing arc(Value self, Value x, Value y, Value width, Value height,
-	    Value start, Value end) {
+	public Nothing arc(Obj self, Obj x, Obj y, Obj width, Obj height,
+	    Obj start, Obj end) {
 		applet.arc($javaFloat(x), $javaFloat(y), $javaFloat(width),
 		    $javaFloat(height), $javaFloat(start), $javaFloat(end));
 		return nothing;
 	}
 	
-	public Nothing ellipse(Value self, Value x, Value y, Value width, Value height) {
+	public Nothing ellipse(Obj self, Obj x, Obj y, Obj width, Obj height) {
 		applet.ellipse($javaFloat(x), $javaFloat(y), $javaFloat(width),
 		    $javaFloat(height));
 		return nothing;
 	}
 	
-	public Nothing line(Value self, Value x1, Value y1, Value x2, Value y2) {
+	public Nothing line(Obj self, Obj x1, Obj y1, Obj x2, Obj y2) {
 		applet.line($javaFloat(x1), $javaFloat(y1), $javaFloat(x2), $javaFloat(y2));
 		return nothing;
 	}
 	
-	public Nothing point(Value self, Value x, Value y) {
+	public Nothing point(Obj self, Obj x, Obj y) {
 		applet.point($javaFloat(x), $javaFloat(y));
 		return nothing;
 	}
 	
-	public Nothing quad(Value self, Value x1, Value y1, Value x2, Value y2,
-	    Value x3, Value y3, Value x4, Value y4) {
+	public Nothing quad(Obj self, Obj x1, Obj y1, Obj x2, Obj y2,
+	    Obj x3, Obj y3, Obj x4, Obj y4) {
 		applet.quad($javaFloat(x1), $javaFloat(y1), $javaFloat(x2), $javaFloat(y2),
 		    $javaFloat(x3), $javaFloat(y3), $javaFloat(x4), $javaFloat(y4));
 		return nothing;
 	}
 	
-	public Nothing rect(Value self, Value x, Value y, Value width, Value height) {
+	public Nothing rect(Obj self, Obj x, Obj y, Obj width, Obj height) {
 		applet.rect($javaFloat(x), $javaFloat(y), $javaFloat(width),
 		    $javaFloat(height));
 		return nothing;
 	}
 	
-	public Nothing triangle(Value self, Value x1, Value y1, Value x2, Value y2,
-	    Value x3, Value y3) {
+	public Nothing triangle(Obj self, Obj x1, Obj y1, Obj x2, Obj y2,
+	    Obj x3, Obj y3) {
 		applet.triangle($javaFloat(x1), $javaFloat(y1), $javaFloat(x2),
 		    $javaFloat(y2), $javaFloat(x3), $javaFloat(y3));
 		return nothing;
@@ -197,13 +197,13 @@ public final class GraceProcessing extends Prelude {
 		
 		public void setup() {
 			smooth();
-			for (Value block : onSetup) {
+			for (Obj block : onSetup) {
 				block.invoke("apply");
 			}
 		}
 		
 		public void draw() {
-			for (Value block : onDraw) {
+			for (Obj block : onDraw) {
 				block.invoke("apply");
 			}
 		}
@@ -262,63 +262,63 @@ public final class GraceProcessing extends Prelude {
 	/**
 	 * The Grace object representing the state of the mouse.
 	 */
-	protected static final class Mouse extends Value {
+	protected static final class Mouse extends Obj {
 		
 		private final MouseButton left = new MouseButton();
 		private final MouseButton right = new MouseButton();
 		private final MouseButton center = new MouseButton();
 		
-		public Num x(Value self) {
+		public Num x(Obj self) {
 			return $number(applet.mouseX);
 		}
 		
-		public Num y(Value self) {
+		public Num y(Obj self) {
 			return $number(applet.mouseY);
 		}
 		
-		public MouseButton left(Value self) {
+		public MouseButton left(Obj self) {
 			return left;
 		}
 		
-		public MouseButton right(Value self) {
+		public MouseButton right(Obj self) {
 			return right;
 		}
 		
-		public MouseButton center(Value self) {
+		public MouseButton center(Obj self) {
 			return center;
 		}
 		
-		private final List<Value> onPress = new LinkedList<Value>();
+		private final List<Obj> onPress = new LinkedList<Obj>();
 		
-		public Nothing onPress(Value self, Value block) {
+		public Nothing onPress(Obj self, Obj block) {
 			onPress.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onRelease = new LinkedList<Value>();
+		private final List<Obj> onRelease = new LinkedList<Obj>();
 		
-		public Nothing onRelease(Value self, Value block) {
+		public Nothing onRelease(Obj self, Obj block) {
 			onRelease.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onClick = new LinkedList<Value>();
+		private final List<Obj> onClick = new LinkedList<Obj>();
 		
-		public Nothing onClick(Value self, Value block) {
+		public Nothing onClick(Obj self, Obj block) {
 			onClick.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onMove = new LinkedList<Value>();
+		private final List<Obj> onMove = new LinkedList<Obj>();
 		
-		public Nothing onMove(Value self, Value block) {
+		public Nothing onMove(Obj self, Obj block) {
 			onMove.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onDrag = new LinkedList<Value>();
+		private final List<Obj> onDrag = new LinkedList<Obj>();
 		
-		public Nothing onDrag(Value self, Value block) {
+		public Nothing onDrag(Obj self, Obj block) {
 			onDrag.add(block);
 			return nothing;
 		}
@@ -332,31 +332,31 @@ public final class GraceProcessing extends Prelude {
 	/**
 	 * The Grace objects representing the three mouse buttons.
 	 */
-	protected static final class MouseButton extends Value {
+	protected static final class MouseButton extends Obj {
 		
 		private boolean isPressed;
 		
-		public Bool isPressed(Value self) {
+		public Bool isPressed(Obj self) {
 			return isPressed ? $true : $false;
 		}
 		
-		private final List<Value> onPress = new LinkedList<Value>();
+		private final List<Obj> onPress = new LinkedList<Obj>();
 		
-		public Nothing onPress(Value self, Value block) {
+		public Nothing onPress(Obj self, Obj block) {
 			onPress.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onRelease = new LinkedList<Value>();
+		private final List<Obj> onRelease = new LinkedList<Obj>();
 		
-		public Nothing onRelease(Value self, Value block) {
+		public Nothing onRelease(Obj self, Obj block) {
 			onRelease.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onClick = new LinkedList<Value>();
+		private final List<Obj> onClick = new LinkedList<Obj>();
 		
-		public Nothing onClick(Value self, Value block) {
+		public Nothing onClick(Obj self, Obj block) {
 			onClick.add(block);
 			return nothing;
 		}
@@ -370,31 +370,31 @@ public final class GraceProcessing extends Prelude {
 	/**
 	 * The Grace object representing the state of the keyboard.
 	 */
-	protected static final class Keyboard extends Value {
+	protected static final class Keyboard extends Obj {
 		
 		private final Map<Integer, Key> keys = new HashMap<Integer, Key>();
 		
-		public grace.lang.List keys(Value self) {
-			return $list(keys.values().toArray(new Value[keys.size()]));
+		public grace.lang.List keys(Obj self) {
+			return $list(keys.values().toArray(new Obj[keys.size()]));
 		}
 		
-		private final List<Value> onPress = new LinkedList<Value>();
+		private final List<Obj> onPress = new LinkedList<Obj>();
 		
-		public Nothing onPress(Value self, Value block) {
+		public Nothing onPress(Obj self, Obj block) {
 			onPress.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onRelease = new LinkedList<Value>();
+		private final List<Obj> onRelease = new LinkedList<Obj>();
 		
-		public Nothing onRelease(Value self, Value block) {
+		public Nothing onRelease(Obj self, Obj block) {
 			onRelease.add(block);
 			return nothing;
 		}
 		
-		private final List<Value> onType = new LinkedList<Value>();
+		private final List<Obj> onType = new LinkedList<Obj>();
 		
-		public Nothing onType(Value self, Value block) {
+		public Nothing onType(Obj self, Obj block) {
 			onType.add(block);
 			return nothing;
 		}
@@ -412,7 +412,7 @@ public final class GraceProcessing extends Prelude {
 	 * string, which is the character of the key pressed. Simply adds the code
 	 * method which returns the key code of the character.
 	 */
-	protected static final class Key extends Value {
+	protected static final class Key extends Obj {
 		
 		private int code;
 		
@@ -422,7 +422,7 @@ public final class GraceProcessing extends Prelude {
 			this.code = code;
 		}
 		
-		public Num code(Value self) {
+		public Num code(Obj self) {
 			return $number(code);
 		}
 		
@@ -435,7 +435,7 @@ public final class GraceProcessing extends Prelude {
 	/**
 	 * The Grace objects representing colors.
 	 */
-	protected static final class Color extends Value {
+	protected static final class Color extends Obj {
 		
 		private int color;
 		
@@ -443,39 +443,39 @@ public final class GraceProcessing extends Prelude {
 			this.color = color;
 		}
 		
-		public Num red(Value self) {
+		public Num red(Obj self) {
 			return $number(applet.red(color));
 		}
 		
-		public Num green(Value self) {
+		public Num green(Obj self) {
 			return $number(applet.green(color));
 		}
 		
-		public Num blue(Value self) {
+		public Num blue(Obj self) {
 			return $number(applet.blue(color));
 		}
 		
-		public Num hue(Value self) {
+		public Num hue(Obj self) {
 			return $number(applet.hue(color));
 		}
 		
-		public Num saturation(Value self) {
+		public Num saturation(Obj self) {
 			return $number(applet.saturation(color));
 		}
 		
-		public Num brightness(Value self) {
+		public Num brightness(Obj self) {
 			return $number(applet.brightness(color));
 		}
 		
-		public Num alpha(Value self) {
+		public Num alpha(Obj self) {
 			return $number(applet.alpha(color));
 		}
 		
-		public Str hex(Value self) {
+		public Str hex(Obj self) {
 			return $string(PApplet.hex(color));
 		}
 		
-		public Str asString(Value self) {
+		public Str asString(Obj self) {
 			return $string("#" + PApplet.hex(color));
 		}
 		
@@ -485,8 +485,8 @@ public final class GraceProcessing extends Prelude {
 		
 	}
 	
-	private static void applyAll(List<Value> blocks, Value... args) {
-		for (Value block : blocks) {
+	private static void applyAll(List<Obj> blocks, Obj... args) {
+		for (Obj block : blocks) {
 			block.invoke("apply", args);
 		}
 	}
