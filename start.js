@@ -176,6 +176,18 @@ $(function() {
     return code;
   }
 
+  function run(code) {
+    try {
+      eval(compile(code));
+      gracecode_USER.call({methods: {}});  
+    } catch (e) {
+      if (e !== "ErrorExit") {
+        stderr_txt.value += e;
+      }
+      throw e;
+    }
+  }
+
   $("#compile").click(function() {
     output.val("");
     error.val("");
@@ -183,16 +195,14 @@ $(function() {
     processing.size(500, 500);
     processing.background(255);
     
-    eval(compile(code.val()));
-
+    run(code.val());
     draw.focus();
-    gracecode_USER.call({methods: {}});
   });
 
   $("#repl").keyup(function(e) {
     if (e.which === 13) {
       error.val("");
-      eval(compile("print(" + $(this).val() + ")"));
+      run("print(" + $(this).val() + ")");
       gracecode_USER.call({methods: {}});
     }
   });
